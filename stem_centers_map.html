@@ -223,7 +223,20 @@
         };
 
         // Loading and parsing CSV data
-        const csvData = loadFileData("STEM+Centers+Map.csv");
+        fetch('https://raw.githubusercontent.com/yourusername/stem-centers-map/main/STEM+Centers+Map.csv')
+    .then(response => response.text())
+    .then(csvData => {
+        Papa.parse(csvData, {
+            // ... rest of the Papa.parse config
+        });
+    })
+    .catch(err => {
+        console.error('Error fetching CSV:', err);
+        L.popup()
+            .setLatLng(map.getCenter())
+            .setContent('Error loading STEM Centers data. Please try again later.')
+            .openOn(map);
+    });
         Papa.parse(csvData, {
             header: true,
             skipEmptyLines: true,
